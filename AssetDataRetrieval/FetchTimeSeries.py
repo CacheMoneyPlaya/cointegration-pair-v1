@@ -6,13 +6,13 @@ import csv
 import multiprocessing
 import random
 import time
-from colorist import Color
+
 
 root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(root)
 
+from colorist import Color
 import ccxt
-
 
 def fetchAllTimeSeriesData(assets: list, timeframe: str, since: str) -> None:
 
