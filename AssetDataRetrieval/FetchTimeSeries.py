@@ -20,7 +20,7 @@ def fetchAllTimeSeriesData(assets: list, timeframe: str, since: str) -> None:
     for index, asset in enumerate(assets):
 
         if index % 2 == 0:
-            time.sleep(2)
+            time.sleep(5)
 
         exchange = 'binance'
         asset_and_quote = asset + '/USDT'
@@ -98,3 +98,8 @@ def scrape_candles_to_csv(filename, exchange_id, max_retries, symbol, timeframe,
 
 # -----------------------------------------------------------------------------
 # Binance's BTC/USDT candles start on 2017-08-17
+
+def clearTimeSeries():
+    dir = './TimeSeriesData'
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))

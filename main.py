@@ -19,17 +19,12 @@ def entry():
 
     total_pairs = (len(tickers)**2)-len(tickers)
 
-    # Fetch all tickers data and store locally
     if reuse_data == False:
-        dir = './TimeSeriesData'
-        for f in os.listdir(dir):
-            os.remove(os.path.join(dir, f))
-
+        fts.clearTimeSeries()
         print(f"{Color.YELLOW}Scraping specified ticker candle data...{Color.OFF}")
         fts.fetchAllTimeSeriesData(tickers, timeframe, since)
 
-    # Compute Engle-Granger test for each possible combination
-    print(f"{Color.YELLOW}Running Engle-Granger tests on {total_pairs} unique pairs ...{Color.OFF}")
+    print(f"{Color.YELLOW}Running Engle-Granger tests on {total_pairs} unique pairs assuming 95% confidence interval ...{Color.OFF}")
     p_test_values = eg.handle(tickers, total_pairs)
 
     o.output_p_values(p_test_values)
