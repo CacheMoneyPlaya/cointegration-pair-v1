@@ -17,7 +17,7 @@ def entry():
 
     tickers = tb.getBasket(basket)
 
-    total_pairs = (len(tickers)**2)-len(tickers)
+    total_pairs = (len(tickers)**2)
 
     if reuse_data == False:
         fts.clearTimeSeries()
