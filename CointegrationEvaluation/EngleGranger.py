@@ -9,21 +9,25 @@ import time
 
 root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(root)
+running = multiprocessing.Value('i', 0)
+
 
 def handle(assets: list, combinations: int) -> list:
     jobs = []
+    t0 = time.perf_counter()
 
     with multiprocessing.Manager() as manager:
         PAIR_P_VALUE = manager.list()
+
         for assetOne in assets:
-            print('x')
             p = multiprocessing.Process(target=matchPairs, args=(assetOne, assets, PAIR_P_VALUE))
             jobs.append(p)
             p.start()
-            while len(jobs) > 6:
+            while len(jobs) > multiprocessing.cpu_count():
                 jobs = [job for job in jobs if job.is_alive()]
-        while len(jobs) > 0:
-            jobs = [job for job in jobs if job.is_alive()]
+
+        for job in jobs:
+            job.join()
 
         return sorted(PAIR_P_VALUE, key=lambda x: x['p-value'])
 

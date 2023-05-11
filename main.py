@@ -14,9 +14,7 @@ def entry():
     timeframe = CONFIG['timeframe']
     since = CONFIG['starting_date']
     reuse_data = CONFIG['reuse_data']
-
     tickers = tb.getBasket(basket)
-
     total_pairs = (len(tickers)**2)
 
     if reuse_data == False:
@@ -26,8 +24,9 @@ def entry():
 
     print(f"{Color.YELLOW}Running Engle-Granger tests on {total_pairs} unique pairs assuming 95% confidence interval ...{Color.OFF}")
     p_test_values = eg.handle(tickers, total_pairs)
-
     o.output_p_values(p_test_values)
+
+    # Take top x p-value pairs and chart z-scores
 
 
 if __name__ == '__main__':
