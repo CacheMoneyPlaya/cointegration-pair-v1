@@ -37,6 +37,10 @@ def loadAndNormalizeData(asset: str):
 
     return df_close_normalized
 
+def loadData(asset: str):
+    return pd.read_csv(root + '/cointegration-pair-v1/TimeSeriesData/' + asset + '_USDT.csv')
+
+
 
 def runEngleGranger(df1, df2) -> int:
     return ts.coint(df1, df2)[1]
