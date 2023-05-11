@@ -23,9 +23,9 @@ def handle(assets: list, combinations: int) -> list:
             p = multiprocessing.Process(target=matchPairs, args=(assetOne, assets, PAIR_P_VALUE))
             jobs.append(p)
             p.start()
-            while len(jobs) > multiprocessing.cpu_count():
+            while len(jobs) > 8:
                 jobs = [job for job in jobs if job.is_alive()]
-
+        print('waiting on jobs...')
         for job in jobs:
             job.join()
 
@@ -50,7 +50,11 @@ def matchPairs(assetOne, assets, PAIR_P_VALUE):
             p_value = runEngleGranger(a1, a2)
             PAIR_P_VALUE.append(
                 {
-                    'pair': assetOne + 'USDT' + '-' + assetTwo + 'USDT',
+                    'pair': {
+                        'a': assetOne,
+                        'b': assetTwo,
+                    },
+                    'quote': 'USDT',
                     'p-value': p_value,
                 }
             )

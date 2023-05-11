@@ -5,6 +5,7 @@ from dotenv import load_dotenv, dotenv_values
 from CointegrationEvaluation import EngleGranger as eg
 from colorist import Color
 from DataOutput import Output as o
+from ZScoreEvaluation import ZScore as zs
 
 CONFIG = None
 
@@ -27,6 +28,7 @@ def entry():
     o.output_p_values(p_test_values)
 
     # Take top x p-value pairs and chart z-scores
+    zs.handle(p_test_values)
 
 
 if __name__ == '__main__':
