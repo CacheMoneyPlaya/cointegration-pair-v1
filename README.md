@@ -5,7 +5,12 @@
 
 Small project I wrote over a couple of evenings for analyzing certain 'basket' crypto
 pairs for cointegration which I then use to determine likely retracements on Z-Index
-charts over a years hourly data. Currently back testing...
+charts over a years hourly data. Currently back testing... All workers for running coint
+tests are run across the max numbers of cores the host machine has, pooling_example.py
+contains a pooling version which works fine but about 3x slower than my botched process
+version. On M1 chip maps I have noticed processes run stupidly slow, so likely pooling is
+a better alternative on these arch types. By no means clean code as it was just me messing
+about looking for interesting stat relationships
 
 ## TODO:
 - Clean up files and improve efficiency of coint tests
@@ -26,7 +31,7 @@ python main.py --basket CHINA --timeframe 1h --starting_date '2023-01-01T00:00:0
 - --starting_date - Date to start analysis from, earlier the better for test coverage i.e '--starting_date '2023-01-01T00:00:00Z'' (YYYY-MM-DD)
 - --reuse_data - If you have previously run searches and you wish to reuse CSVs that were already generated use this tag (If one is missing you'll need to re run entirely)
 
-*** You will need to download [here](https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.5/) for console Z-Index graphing and install pip requirements ***
+*** You will need to download [GNUPLOT](https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.5/) for console Z-Index graphing and install pip requirements ***
 
 
 ![Example](https://raw.githubusercontent.com/CacheMoneyPlaya/cointegration-pair-v1/main/Images/eg1.png?raw=true)

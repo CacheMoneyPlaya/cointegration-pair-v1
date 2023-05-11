@@ -1,11 +1,11 @@
-import statsmodels.tsa.stattools as ts
-from sklearn.preprocessing import minmax_scale
-from alive_progress import alive_bar
-import pandas as pd
 import os
 import sys
-import multiprocessing
 import time
+import pandas as pd
+import multiprocessing
+from alive_progress import alive_bar
+import statsmodels.tsa.stattools as ts
+from sklearn.preprocessing import minmax_scale
 
 root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(root)
@@ -23,13 +23,14 @@ def handle(assets: list, combinations: int) -> list:
             p = multiprocessing.Process(target=matchPairs, args=(assetOne, assets, PAIR_P_VALUE))
             jobs.append(p)
             p.start()
-            while len(jobs) > 8:
+            while len(jobs) > multiprocessing.cpu_count():
                 jobs = [job for job in jobs if job.is_alive()]
-        print('waiting on jobs...')
+        print('Waiting on jobs to complete...')
         for job in jobs:
             job.join()
 
         return sorted(PAIR_P_VALUE, key=lambda x: x['p-value'])
+
 
 def loadAndNormalizeData(asset: str):
     df = pd.read_csv(root + '/cointegration-pair-v1/TimeSeriesData/' + asset + '_USDT.csv')
@@ -37,9 +38,9 @@ def loadAndNormalizeData(asset: str):
 
     return df_close_normalized
 
+
 def loadData(asset: str):
     return pd.read_csv(root + '/cointegration-pair-v1/TimeSeriesData/' + asset + '_USDT.csv')
-
 
 
 def runEngleGranger(df1, df2) -> int:
