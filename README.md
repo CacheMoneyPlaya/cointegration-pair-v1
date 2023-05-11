@@ -1,7 +1,7 @@
 
 
 
-# Z-Index using the Engle-Granger as a precursor
+# Z-Index using the Engle-Granger for cointegration strength on crypto pairs
 
 Small project I wrote over a couple of evenings for analyzing certain 'basket' crypto
 pairs for cointegration which I then use to determine likely retracements on Z-Index
