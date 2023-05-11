@@ -7,8 +7,6 @@ Small project I wrote over a couple of evenings for analyzing certain 'basket' c
 pairs for cointegration which I then use to determine likely retracements on Z-Index
 charts over a years hourly data. Currently back testing...
 
-![The numbers Mason](https://tenor.com/view/what-do-they-mean-random-numbers-gif-10654449.gif)
-
 ## TODO:
 - Clean up files and improve efficiency of coint tests
 - Introduce single pair analysis as command line parameter
@@ -33,3 +31,4 @@ python main.py --timeframe 1h --starting_date '2023-01-01T00:00:00Z'
 
 ![Example](https://raw.githubusercontent.com/CacheMoneyPlaya/cointegration-pair-v1/main/Images/eg1.png?raw=true)
 ![FVG detection](https://raw.githubusercontent.com/CacheMoneyPlaya/cointegration-pair-v1/main/Images/eg2.png?raw=true)
+![The numbers Mason](https://tenor.com/view/what-do-they-mean-random-numbers-gif-10654449.gif)
