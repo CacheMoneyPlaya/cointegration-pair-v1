@@ -31,5 +31,5 @@ python main.py --timeframe 1h --starting_date '2023-01-01T00:00:00Z'
 *** You will need to download [here](https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.5/) for console Z-Index graphing and install pip requirements ***
 
 
-![Backtest](https://github.com/CacheMoneyPlaya/backtest-rndm1.0/blob/main/Charts/Screenshot%202022-11-04%20at%2022.52.38.png?raw=true)
-![FVG detection](https://github.com/CacheMoneyPlaya/backtest-rndm1.0/blob/main/Charts/Screenshot_2022-11-01_at_19.11.03.png?raw=true)
+![Example](https://raw.githubusercontent.com/CacheMoneyPlaya/cointegration-pair-v1/main/Images/eg1.png?raw=true)
+![FVG detection](https://raw.githubusercontent.com/CacheMoneyPlaya/cointegration-pair-v1/main/Images/eg2.png?raw=true)
