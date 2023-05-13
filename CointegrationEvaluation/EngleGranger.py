@@ -3,6 +3,7 @@ import sys
 import time
 import pandas as pd
 import multiprocessing
+from colorist import Color
 from alive_progress import alive_bar
 import statsmodels.tsa.stattools as ts
 from sklearn.preprocessing import minmax_scale
@@ -14,7 +15,6 @@ running = multiprocessing.Value('i', 0)
 
 def handle(assets: list, combinations: int) -> list:
     jobs = []
-    t0 = time.perf_counter()
 
     with multiprocessing.Manager() as manager:
         PAIR_P_VALUE = manager.list()
@@ -25,9 +25,10 @@ def handle(assets: list, combinations: int) -> list:
             p.start()
             while len(jobs) > multiprocessing.cpu_count():
                 jobs = [job for job in jobs if job.is_alive()]
-        print('Waiting on jobs to complete...')
         for job in jobs:
             job.join()
+
+        print(f"{Color.YELLOW}Waiting for all tasks to complete..{Color.OFF}")
 
         return sorted(PAIR_P_VALUE, key=lambda x: x['p-value'])
 

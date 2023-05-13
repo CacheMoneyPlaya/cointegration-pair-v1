@@ -14,8 +14,8 @@ sys.path.append(root)
 from colorist import Color
 import ccxt
 
-def fetchAllTimeSeriesData(assets: list, timeframe: str, since: str) -> None:
 
+def fetchAllTimeSeriesData(assets: list, timeframe: str, since: str, console_display: bool) -> None:
     jobs = []
     for index, asset in enumerate(assets):
 
@@ -25,7 +25,7 @@ def fetchAllTimeSeriesData(assets: list, timeframe: str, since: str) -> None:
         exchange = 'binance'
         asset_and_quote = asset + '/USDT'
         file_name = asset + '_USDT' + '.csv'
-        p = multiprocessing.Process(target=scrape_candles_to_csv, args=(file_name, exchange, 3, asset_and_quote, timeframe, since, 100))
+        p = multiprocessing.Process(target=scrape_candles_to_csv, args=(file_name, exchange, 3, asset_and_quote, timeframe, since, 100, console_display))
         jobs.append(p)
         p.start()
 
@@ -48,15 +48,15 @@ def retry_fetch_ohlcv(exchange, max_retries, symbol, timeframe, since, limit):
             raise  # Exception('Failed to fetch', timeframe, symbol, 'OHLCV in', max_retries, 'attempts')
 
 
-def scrape_ohlcv(exchange, max_retries, symbol, timeframe, since, limit):
+def scrape_ohlcv(exchange, max_retries, symbol, timeframe, since, limit, console_display):
     timeframe_duration_in_seconds = exchange.parse_timeframe(timeframe)
     timeframe_duration_in_ms = timeframe_duration_in_seconds * 1000
     timedelta = limit * timeframe_duration_in_ms
     now = exchange.milliseconds()
     all_ohlcv = []
     fetch_since = since
-
-    print(f"{Color.YELLOW}'Downloading {symbol} time series data...'{Color.OFF}")
+    if console_display:
+        print(f"{Color.YELLOW}'Downloading {symbol} time series data...'{Color.OFF}")
 
     while fetch_since < now:
         ohlcv = retry_fetch_ohlcv(exchange, max_retries, symbol, timeframe, fetch_since, limit)
@@ -65,7 +65,7 @@ def scrape_ohlcv(exchange, max_retries, symbol, timeframe, since, limit):
 
         if len(all_ohlcv):
             pass
-        else:
+        elif console_display:
             print(f"{Color.WHITE}'{len(all_ohlcv)} candles in total from {exchange.iso8601(fetch_since)}' {Color.WHITE}")
 
     return exchange.filter_by_since_limit(all_ohlcv, since, None, key=0)
@@ -81,7 +81,7 @@ def write_to_csv(filename, data):
         csv_writer.writerows(data)
 
 
-def scrape_candles_to_csv(filename, exchange_id, max_retries, symbol, timeframe, since, limit):
+def scrape_candles_to_csv(filename, exchange_id, max_retries, symbol, timeframe, since, limit, console_display):
     # instantiate the exchange by id
     exchange = getattr(ccxt, exchange_id)()
     # convert since from string to milliseconds integer if needed
@@ -90,16 +90,21 @@ def scrape_candles_to_csv(filename, exchange_id, max_retries, symbol, timeframe,
     # preload all markets from the exchange
     exchange.load_markets()
     # fetch all candles
-    ohlcv = scrape_ohlcv(exchange, max_retries, symbol, timeframe, since, limit)
+    ohlcv = scrape_ohlcv(exchange, max_retries, symbol, timeframe, since, limit, console_display)
     # save them to csv file
     write_to_csv(filename, ohlcv)
-
-    print(f"{Color.GREEN}'Saved {len(ohlcv)} candles from {exchange.iso8601(ohlcv[0][0])} to {exchange.iso8601(ohlcv[-1][0])} to {filename}' {Color.OFF}")
+    if console_display:
+        print(f"{Color.GREEN}'Saved {len(ohlcv)} candles from {exchange.iso8601(ohlcv[0][0])} to {exchange.iso8601(ohlcv[-1][0])} to {filename}' {Color.OFF}")
 
 # -----------------------------------------------------------------------------
 # Binance's BTC/USDT candles start on 2017-08-17
 
 def clearTimeSeries():
     dir = './TimeSeriesData'
+    for f in os.listdir(dir):
+        os.remove(os.path.join(dir, f))
+
+def clearPng():
+    dir = './ZScoreEvaluation/Charts'
     for f in os.listdir(dir):
         os.remove(os.path.join(dir, f))
