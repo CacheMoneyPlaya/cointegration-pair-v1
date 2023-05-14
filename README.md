@@ -23,7 +23,7 @@ about looking for interesting stat relationships
 ## Example Command To Use:
 
 ```
-python main.py --basket CHINA --timeframe 1h --starting_date '2023-01-01T00:00:00Z'
+python main.py --basket CHINA --timeframe 1h --starting_date '2023-03-01T00:00:00Z' --display
 ```
 
 - --basket - Specify grouping of assets to analyze as per .env file i.e '--basket CHINA'
