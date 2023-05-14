@@ -36,7 +36,7 @@ def mapValidTests(p_test_values, consoleDisplay):
         # Compute Z-Score
         z_score = scipy.stats.zscore(spread)
         # Chart 100*T candles
-        if z_score.iloc[-1] >= 1.5 or z_score.iloc[-1] <= -1.5:
+        if z_score.iloc[-1] >= 2 or z_score.iloc[-1] <= -2:
             y = z_score[-100:]
             x = list(range(0, len(y), 1))
             if consoleDisplay:

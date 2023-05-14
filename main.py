@@ -35,7 +35,9 @@ def entry():
 
     # Take top x p-value pairs and chart z-scores
     signals = zs.handle(p_test_values, console_display)
-    du.update_discord_channel(signals)
+
+    if console_display == False:
+        du.update_discord_channel(signals)
 
 
 

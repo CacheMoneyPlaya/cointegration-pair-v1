@@ -11,9 +11,9 @@ webhook_domain = config['WEBHOOK_DOMAIN']
 def update_discord_channel(signals) -> None:
     for signal in signals:
         if signal['z_score_n'] > 0:
-            execute_signal(signal, '00ff00')
-        else:
             execute_signal(signal, 'ff0000')
+        else:
+            execute_signal(signal, '00ff00')
 
 
 def execute_signal(data, colour_scheme):
