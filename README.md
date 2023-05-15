@@ -10,7 +10,7 @@ tests are run across the max numbers of cores the host machine has, pooling_exam
 contains a pooling version which works fine but about 3x slower than my botched process
 version. On M1 chip maps I have noticed processes run stupidly slow, so likely pooling is
 a better alternative on these arch types. By no means clean code as it was just me messing
-about looking for interesting stat relationships
+about looking for interesting mean reversion relationships
 
 ## TODO:
 - Clean up files and improve efficiency of coint tests
@@ -24,6 +24,7 @@ about looking for interesting stat relationships
 
 ```
 python main.py --basket CHINA --timeframe 1h --starting_date '2023-03-01T00:00:00Z' --display
+python main.py --timeframe 30m --starting_date '2023-04-01T00:00:00Z' --update NEAR-GRT (Charting of a single pair for updated Z-Score)
 ```
 
 - --basket - Specify grouping of assets to analyze as per .env file i.e '--basket CHINA'
