@@ -17,8 +17,14 @@ def entry():
     since = CONFIG['starting_date']
     reuse_data = CONFIG['reuse_data']
     console_display = CONFIG['display']
+    pair_update = CONFIG['update']
+
+    # If update mode run Z-Score scan against single pair
+    if pair_update:
+        return update_mode(pair_update, timeframe, since)
+
     tickers = tb.getBasket(basket)
-    total_pairs = (len(tickers)**2)
+    total_pairs = (len(tickers)**2)/2
 
     fts.clearPng()
 
@@ -33,12 +39,18 @@ def entry():
     if console_display:
         o.output_p_values(p_test_values)
 
-    # Take top x p-value pairs and chart z-scores
-    signals = zs.handle(p_test_values, console_display)
+    signals = zs.handle(p_test_values, console_display, False)
 
     if console_display == False:
         du.update_discord_channel(signals)
 
+
+def update_mode(tickers, timeframe, since):
+    tickers = tickers.split('-')
+    fts.clearTimeSeries()
+    fts.fetchAllTimeSeriesData(tickers, timeframe, since, False)
+    p_test_values = eg.handle(tickers, 1)
+    signals = zs.handle(p_test_values, True, True)
 
 
 if __name__ == '__main__':
@@ -50,6 +62,7 @@ if __name__ == '__main__':
     parser.add_argument("-r", "--reuse_data", help="Reuse saved data for asset", required=False, action="store_true")
     parser.add_argument("-c", "--engle_granger_threshold", help="Minimum truthy theshold", required=False)
     parser.add_argument("-dc", "--display", help="Display Charts in console", required=False, action="store_true")
+    parser.add_argument("-u", "--update", help="Fetches latest Z-Scores for supplied pairs", required=False)
 
     args, unknown = parser.parse_known_args()
     CONFIG = vars(args)

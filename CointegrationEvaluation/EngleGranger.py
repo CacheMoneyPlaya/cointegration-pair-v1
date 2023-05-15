@@ -24,7 +24,7 @@ def handle(assets: list, combinations: int) -> list:
             p = multiprocessing.Process(target=matchPairs, args=(assetOne, assets, PAIR_P_VALUE, ITTERATED))
             jobs.append(p)
             p.start()
-            while len(jobs) > multiprocessing.cpu_count():
+            while len(jobs) > multiprocessing.cpu_count()-1:
                 jobs = [job for job in jobs if job.is_alive()]
         for job in jobs:
             job.join()

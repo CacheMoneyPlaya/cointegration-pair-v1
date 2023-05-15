@@ -28,6 +28,8 @@ def fetchAllTimeSeriesData(assets: list, timeframe: str, since: str, console_dis
         p = multiprocessing.Process(target=scrape_candles_to_csv, args=(file_name, exchange, 3, asset_and_quote, timeframe, since, 100, console_display))
         jobs.append(p)
         p.start()
+        while len(jobs) > multiprocessing.cpu_count():
+            jobs = [job for job in jobs if job.is_alive()]
 
     while len(jobs) > 0:
         jobs = [job for job in jobs if job.is_alive()]
@@ -41,11 +43,10 @@ def retry_fetch_ohlcv(exchange, max_retries, symbol, timeframe, since, limit):
     try:
         num_retries += 1
         ohlcv = exchange.fetch_ohlcv(symbol, timeframe, since, limit)
-        # print('Fetched', len(ohlcv), symbol, 'candles from', exchange.iso8601 (ohlcv[0][0]), 'to', exchange.iso8601 (ohlcv[-1][0]))
         return ohlcv
     except Exception as inst:
         if num_retries > max_retries:
-            raise  # Exception('Failed to fetch', timeframe, symbol, 'OHLCV in', max_retries, 'attempts')
+            raise
 
 
 def scrape_ohlcv(exchange, max_retries, symbol, timeframe, since, limit, console_display):
