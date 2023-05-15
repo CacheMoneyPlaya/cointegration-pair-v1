@@ -28,8 +28,6 @@ def fetchAllTimeSeriesData(assets: list, timeframe: str, since: str, console_dis
         p = multiprocessing.Process(target=scrape_candles_to_csv, args=(file_name, exchange, 3, asset_and_quote, timeframe, since, 100, console_display))
         jobs.append(p)
         p.start()
-        while len(jobs) > multiprocessing.cpu_count():
-            jobs = [job for job in jobs if job.is_alive()]
 
     while len(jobs) > 0:
         jobs = [job for job in jobs if job.is_alive()]

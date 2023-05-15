@@ -24,7 +24,6 @@ def entry():
         return update_mode(pair_update, timeframe, since)
 
     tickers = tb.getBasket(basket)
-    total_pairs = (len(tickers)**2)/2
 
     fts.clearPng()
 
@@ -33,8 +32,8 @@ def entry():
         print(f"{Color.YELLOW}Scraping specified ticker candle data...{Color.OFF}")
         fts.fetchAllTimeSeriesData(tickers, timeframe, since, console_display)
 
-    print(f"{Color.YELLOW}Running Engle-Granger tests on {total_pairs} unique pairs assuming 95% confidence interval ...{Color.OFF}")
-    p_test_values = eg.handle(tickers, total_pairs)
+    print(f"{Color.YELLOW}Running Engle-Granger tests assuming 95% confidence interval ...{Color.OFF}")
+    p_test_values = eg.handle(tickers)
 
     if console_display:
         o.output_p_values(p_test_values)
@@ -49,7 +48,8 @@ def update_mode(tickers, timeframe, since):
     tickers = tickers.split('-')
     fts.clearTimeSeries()
     fts.fetchAllTimeSeriesData(tickers, timeframe, since, False)
-    p_test_values = eg.handle(tickers, 1)
+    p_test_values = eg.handle(tickers)
+    print(p_test_values)
     signals = zs.handle(p_test_values, True, True)
 
 

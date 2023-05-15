@@ -13,7 +13,7 @@ sys.path.append(root)
 running = multiprocessing.Value('i', 0)
 
 
-def handle(assets: list, combinations: int) -> list:
+def handle(assets: list) -> list:
     jobs = []
 
     with multiprocessing.Manager() as manager:
@@ -24,12 +24,13 @@ def handle(assets: list, combinations: int) -> list:
             p = multiprocessing.Process(target=matchPairs, args=(assetOne, assets, PAIR_P_VALUE, ITTERATED))
             jobs.append(p)
             p.start()
-            while len(jobs) > multiprocessing.cpu_count()-1:
+            while len(jobs) > multiprocessing.cpu_count():
                 jobs = [job for job in jobs if job.is_alive()]
         for job in jobs:
             job.join()
 
         print(f"{Color.YELLOW}Waiting for all tasks to complete..{Color.OFF}")
+
         return sorted(PAIR_P_VALUE, key=lambda x: x['p-value'])
 
 
@@ -55,9 +56,9 @@ def matchPairs(assetOne, assets, PAIR_P_VALUE, ITTERATED):
         reverseKey = assetTwo+assetOne
         # If we dont have the same df and lengths are same and is not same as reverse
         if assetOne != assetTwo and len(a1) == len(a2) and reverseKey not in ITTERATED:
-            p_value = runEngleGranger(a1, a2)
             key_name = assetOne+assetTwo
             ITTERATED.update({key_name:True})
+            p_value = runEngleGranger(a1, a2)
             PAIR_P_VALUE.append(
                 {
                     'pair': {

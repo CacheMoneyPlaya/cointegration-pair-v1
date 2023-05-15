@@ -18,11 +18,13 @@ def generateRetuns(df):
 
 
 def mapValidTests(p_test_values, consoleDisplay, updateMode):
-    p_test_values = list(filter(lambda d: d['p-value'] < 0.05, p_test_values))
+
+    if updateMode == False:
+        p_test_values = list(filter(lambda d: d['p-value'] < 0.05, p_test_values))
+
+    fig = tpl.figure()
 
     for result in p_test_values:
-        fig = tpl.figure()
-
         a_ticker = result['pair']['a']
         b_ticker = result['pair']['b']
         pair = a_ticker + 'USDT' + '/' + b_ticker + 'USDT'
@@ -41,7 +43,7 @@ def mapValidTests(p_test_values, consoleDisplay, updateMode):
         # Remove any void values
         spread = spread.replace([np.inf, -np.inf], np.nan)
         spread = spread.dropna(axis=0)
-        
+
         # Compute Z-Score
         z_score = scipy.stats.zscore(spread)
 
