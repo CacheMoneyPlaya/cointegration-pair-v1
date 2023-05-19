@@ -10,28 +10,15 @@ from sklearn.preprocessing import minmax_scale
 
 root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(root)
-running = multiprocessing.Value('i', 0)
-
+PAIR_P_VALUE = list()
+ITTERATED = dict()
 
 def handle(assets: list) -> list:
-    jobs = []
 
-    with multiprocessing.Manager() as manager:
-        PAIR_P_VALUE = manager.list()
-        ITTERATED = manager.dict()
+    for assetOne in assets:
+        matchPairs(assetOne, assets, PAIR_P_VALUE, ITTERATED)
 
-        for assetOne in assets:
-            p = multiprocessing.Process(target=matchPairs, args=(assetOne, assets, PAIR_P_VALUE, ITTERATED))
-            jobs.append(p)
-            p.start()
-            while len(jobs) > multiprocessing.cpu_count():
-                jobs = [job for job in jobs if job.is_alive()]
-        for job in jobs:
-            job.join()
-
-        print(f"{Color.YELLOW}Waiting for all tasks to complete..{Color.OFF}")
-
-        return sorted(PAIR_P_VALUE, key=lambda x: x['p-value'])
+    return sorted(PAIR_P_VALUE, key=lambda x: x['p-value'])
 
 
 def loadAndNormalizeData(asset: str):

@@ -16,22 +16,14 @@ import ccxt
 
 
 def fetchAllTimeSeriesData(assets: list, timeframe: str, since: str, console_display: bool) -> None:
-    jobs = []
     for index, asset in enumerate(assets):
-
         if index % 2 == 0:
-            time.sleep(5)
+            time.sleep(2.5)
 
         exchange = 'binance'
         asset_and_quote = asset + '/USDT'
         file_name = asset + '_USDT' + '.csv'
-        p = multiprocessing.Process(target=scrape_candles_to_csv, args=(file_name, exchange, 3, asset_and_quote, timeframe, since, 100, console_display))
-        jobs.append(p)
-        p.start()
-
-    while len(jobs) > 0:
-        jobs = [job for job in jobs if job.is_alive()]
-        time.sleep(1)
+        scrape_candles_to_csv(file_name, exchange, 3, asset_and_quote, timeframe, since, 100, console_display)
 
     print(f"{Color.GREEN}DOWNLOAD COMPLETE{Color.GREEN}")
 
