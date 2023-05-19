@@ -59,7 +59,7 @@ def mapValidTests(p_test_values, consoleDisplay, updateMode):
                 fig.plot(x, y, label=pair, width=150, height=45)
             else:
                 # Otherwise create a PNG Ffor emission
-                chartZScore(a_tick, b_ticker, x, y)
+                chartZScore(a_ticker, b_ticker, x, y)
 
             # Track passing tests
             POSITIVE_TESTS.append({
@@ -85,9 +85,9 @@ def chartZScore(a, b, x , y):
 
     plt.plot(x, y)
 
-    plt.title(a_ticker + '-' + b_ticker, fontsize=14)
+    plt.title(a + '-' + b, fontsize=14)
     plt.xlabel('N*T', fontsize=14)
     plt.ylabel('Z-SCORE', fontsize=14)
 
-    plt.savefig('./ZScoreEvaluation/Charts/' + a_ticker + '_' + b_ticker + '.png')
+    plt.savefig('./ZScoreEvaluation/Charts/' + a + '_' + b + '.png')
     plt.clf()
