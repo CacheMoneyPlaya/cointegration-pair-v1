@@ -12,37 +12,42 @@ CONFIG = None
 
 def entry():
 
-    basket = CONFIG['basket']
-    timeframe = CONFIG['timeframe']
-    since = CONFIG['starting_date']
-    reuse_data = CONFIG['reuse_data']
-    console_display = CONFIG['display']
-    pair_update = CONFIG['update']
+    try:
+        basket = CONFIG['basket']
+        timeframe = CONFIG['timeframe']
+        since = CONFIG['starting_date']
+        reuse_data = CONFIG['reuse_data']
+        console_display = CONFIG['display']
+        pair_update = CONFIG['update']
 
-    # If update mode run Z-Score scan against single pair
-    if pair_update:
-        return update_mode(pair_update, timeframe, since)
+        # If update mode run Z-Score scan against single pair
+        if pair_update:
+            return update_mode(pair_update, timeframe, since)
 
-    tickers = tb.getBasket(basket)
+        tickers = tb.getBasket(basket)
 
-    fts.clearPng()
+        fts.clearPng()
 
-    if reuse_data == False:
-        fts.clearTimeSeries()
-        print(f"{Color.YELLOW}Scraping specified ticker candle data...{Color.OFF}")
-        fts.fetchAllTimeSeriesData(tickers, timeframe, since, console_display)
+        if reuse_data == False:
+            fts.clearTimeSeries()
+            print(f"{Color.YELLOW}Scraping specified ticker candle data...{Color.OFF}")
+            fts.fetchAllTimeSeriesData(tickers, timeframe, since, console_display)
 
-    print(f"{Color.YELLOW}Running Engle-Granger tests assuming 95% confidence interval ...{Color.OFF}")
-    p_test_values = eg.handle(tickers)
+        print(f"{Color.YELLOW}Running Engle-Granger tests assuming 95% confidence interval ...{Color.OFF}")
+        p_test_values = eg.handle(tickers)
 
-    if console_display:
-        o.output_p_values(p_test_values)
+        if console_display:
+            o.output_p_values(p_test_values)
 
-    signals = zs.handle(p_test_values, console_display, False)
+        signals = zs.handle(p_test_values, console_display, False)
 
-    if console_display == False:
-        du.update_discord_channel(signals)
+        if console_display == False:
+            du.update_discord_channel(signals)
 
+    except Exception as e:
+        f = open('log.txt', 'w')
+        f.write('An exceptional thing happed - %s' % e)
+        f.close()
 
 def update_mode(tickers, timeframe, since):
     tickers = tickers.split('-')
