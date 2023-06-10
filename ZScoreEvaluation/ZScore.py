@@ -5,6 +5,7 @@ import termplotlib as tpl
 from dotenv import load_dotenv
 import matplotlib.pyplot as plt
 from CointegrationEvaluation import EngleGranger as eg
+import statsmodels.api as sm
 
 POSITIVE_TESTS = []
 
@@ -33,6 +34,10 @@ def mapValidTests(p_test_values, consoleDisplay, updateMode):
         df1 = eg.loadData(a_ticker)
         df2 = eg.loadData(b_ticker)
 
+        # Generate the mean of the time series for Z=0
+        pair_price_df = df1['close']/df2['close']
+        z_zero = pair_price_df.mean()
+
         # Calculate returns in each df respective to close
         df1_returns = generateRetuns(df1['close'])
         df2_returns = generateRetuns(df2['close'])
@@ -47,9 +52,10 @@ def mapValidTests(p_test_values, consoleDisplay, updateMode):
         # Compute Z-Score
         z_score = scipy.stats.zscore(spread)
 
-        # Chart 100*T candles
-        if (z_score.iloc[-1] >= 1.5 or z_score.iloc[-1] <= -1.5) or updateMode == True:
+        half_life = calculate_half_life(df1['close'], df2['close'])
 
+        # Chart 100*T candles
+        if ((z_score.iloc[-1] >= 1 or z_score.iloc[-1] <= -1) and half_life < 10) or updateMode == True:
             # Generic axis data
             y = z_score[-100:]
             x = list(range(0, len(y), 1))
@@ -66,7 +72,9 @@ def mapValidTests(p_test_values, consoleDisplay, updateMode):
                 'a_ticker': a_ticker,
                 'b_ticker': b_ticker,
                 'z_score_n': round(z_score.iloc[-1], 3),
-                'p_value': round(result['p-value'], 5)
+                'p_value': round(result['p-value'], 5),
+                'half_life': half_life,
+                'z_zero': round(z_zero, 6),
             })
 
     # Print all ASCII chart instances
@@ -74,6 +82,21 @@ def mapValidTests(p_test_values, consoleDisplay, updateMode):
         print(fig.get_string())
 
     return POSITIVE_TESTS
+
+
+def calculate_half_life(df1, df2):
+    # Compute spread
+    spread = df1 - df2
+    # Remove any void values
+    spread = spread.replace([np.inf, -np.inf], np.nan)
+    spread = spread.dropna(axis=0)
+    lag = np.roll(spread, 1)
+    lag[0] = 0
+    ret = spread - lag
+    lag2 = sm.add_constant(lag)
+    model = sm.OLS(ret, lag2)
+    res = model.fit()
+    return round(-np.log(2) / res.params[1], 2)
 
 
 def chartZScore(a, b, x , y):

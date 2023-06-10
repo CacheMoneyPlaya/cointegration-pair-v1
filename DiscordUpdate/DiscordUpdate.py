@@ -40,6 +40,8 @@ def execute_signal(data, colour_scheme):
 
 def build_embedded_content(data, colour_scheme, file_name):
     z_score = str(data['z_score_n'])
+    half_life = str(data['half_life'])
+    z_zero = str(data['z_zero'])
     pair = data['a_ticker'] + 'USDT-' + data['b_ticker'] + 'USDT'
     p_value = str(data['p_value'])
 
@@ -50,6 +52,8 @@ def build_embedded_content(data, colour_scheme, file_name):
     embed.add_embed_field(name='PAIR', value=pair, inline=False)
     embed.add_embed_field(name='P-VALUE COEF', value=p_value + ' :white_check_mark:', inline=False)
     embed.add_embed_field(name='LATEST Z-SCORE', value=z_score, inline=False)
+    embed.add_embed_field(name='HALF-LIFE (Hours)', value=half_life, inline=False)
+    embed.add_embed_field(name='Pair price at mean (Z=0)', value=z_zero, inline=False)
     embed.add_embed_field(name='Time UTC', value=time.strftime("%d-%m-%Y %H:%M:%S", time.localtime()), inline=False)
     embed.set_thumbnail(url='attachment://' + file_name)
 

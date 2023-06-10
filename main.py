@@ -7,6 +7,8 @@ from colorist import Color
 from DataOutput import Output as o
 from ZScoreEvaluation import ZScore as zs
 from DiscordUpdate import DiscordUpdate as du
+import arrow
+
 
 CONFIG = None
 
@@ -15,7 +17,9 @@ def entry():
     try:
         basket = CONFIG['basket']
         timeframe = CONFIG['timeframe']
-        since = CONFIG['starting_date']
+        # since = CONFIG['starting_date']
+        # 1000 Hours/Data points
+        since = arrow.utcnow().shift(days=-42).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")
         reuse_data = CONFIG['reuse_data']
         console_display = CONFIG['display']
         pair_update = CONFIG['update']
@@ -45,16 +49,14 @@ def entry():
             du.update_discord_channel(signals)
 
     except Exception as e:
-        f = open('log.txt', 'w')
-        f.write('An exceptional thing happed - %s' % e)
-        f.close()
+        raise e
 
 def update_mode(tickers, timeframe, since):
     tickers = tickers.split('-')
     fts.clearTimeSeries()
     fts.fetchAllTimeSeriesData(tickers, timeframe, since, False)
     p_test_values = eg.handle(tickers)
-    print(p_test_values)
+
     signals = zs.handle(p_test_values, True, True)
 
 
@@ -63,7 +65,7 @@ if __name__ == '__main__':
 
     parser.add_argument("-b", "--basket", help="Baskey to calculate cointegration coefficient, defined in .env", required=False)
     parser.add_argument("-t", "--timeframe", help="OHLC Timeframe i.e. 1m,5m,15m..", required=True)
-    parser.add_argument("-d", "--starting_date", help="Datascrape start date i.e. '2020-05-20'", required=True)
+    # parser.add_argument("-d", "--starting_date", help="Datascrape start date i.e. '2020-05-20'", required=True)
     parser.add_argument("-r", "--reuse_data", help="Reuse saved data for asset", required=False, action="store_true")
     parser.add_argument("-c", "--engle_granger_threshold", help="Minimum truthy theshold", required=False)
     parser.add_argument("-dc", "--display", help="Display Charts in console", required=False, action="store_true")
