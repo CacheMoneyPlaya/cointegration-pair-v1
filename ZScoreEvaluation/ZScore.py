@@ -55,7 +55,7 @@ def mapValidTests(p_test_values, consoleDisplay, updateMode):
         half_life = calculate_half_life(df1['close'], df2['close'])
 
         # Chart 100*T candles
-        if ((z_score.iloc[-1] >= 1 or z_score.iloc[-1] <= -1) and half_life < 10) or updateMode == True:
+        if ((z_score.iloc[-1] >= 1.5 or z_score.iloc[-1] <= -1.5) and half_life < 10) or updateMode == True:
             # Generic axis data
             y = z_score[-100:]
             x = list(range(0, len(y), 1))
