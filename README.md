@@ -37,5 +37,4 @@ python main.py --timeframe 30m --starting_date '2023-04-01T00:00:00Z' --update N
 
 ![Example](https://raw.githubusercontent.com/CacheMoneyPlaya/cointegration-pair-v1/main/Images/eg1.png?raw=true)
 ![FVG detection](https://raw.githubusercontent.com/CacheMoneyPlaya/cointegration-pair-v1/main/Images/eg2.png?raw=true)
-![Something](https://imgur.com/a/DI1NWIL)
 ![The numbers Mason](https://tenor.com/view/what-do-they-mean-random-numbers-gif-10654449.gif)
