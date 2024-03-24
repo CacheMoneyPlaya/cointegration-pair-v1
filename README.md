@@ -23,13 +23,13 @@ about looking for interesting mean reversion relationships
 ## Example Command To Use:
 
 ```
-python main.py --basket CHINA --timeframe 1h --starting_date '2023-03-01T00:00:00Z' --display
-python main.py --timeframe 30m --starting_date '2023-04-01T00:00:00Z' --update NEAR-GRT (Charting of a single pair for updated Z-Score)
+python main.py --basket CHINA --timeframe 1h --display
+python main.py --timeframe 30m --update NEAR-GRT (Charting of a single pair for updated Z-Score)
 ```
 
 - --basket - Specify grouping of assets to analyze as per .env file i.e '--basket CHINA'
 - --timeframe - Specify the candle timeframe i.e '--timeframe 1h'
-- --starting_date - Date to start analysis from, earlier the better for test coverage i.e '--starting_date '2023-01-01T00:00:00Z'' (YYYY-MM-DD)
+- --starting_date - Date to start analysis from, earlier the better for test coverage i.e '--starting_date '2023-01-01T00:00:00Z'' (YYYY-MM-DD) but currently omitted
 - --reuse_data - If you have previously run searches and you wish to reuse CSVs that were already generated use this tag (If one is missing you'll need to re run entirely)
 
 *** You will need to download [GNUPLOT](https://sourceforge.net/projects/gnuplot/files/gnuplot/5.4.5/) for console Z-Index graphing and install pip requirements ***
